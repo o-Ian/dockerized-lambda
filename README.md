@@ -1,2 +1,15 @@
 # dockerized-lambda
-This project contains a lambda being handled by Docker and a CI/CD that send it over to AWS.   
+## Description
+This project contains a Lambda function managed by Docker and a CI/CD pipeline that deploys it to AWS.
+## Prerequisites
+- Java 17
+- Docker
+- AWS CLI
+## Installation
+⚠️------⚠️
+## Usage
+⚠️------⚠️
+## Contribution
+⚠️------⚠️
+## License
+⚠️------⚠️
