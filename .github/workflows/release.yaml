@@ -1,20 +1,36 @@
-name: Super-Linter
+name: Deploy to ECR
 
 on:
   push:
     branches:
       - main
 
-jobs:
-  super-lint:
-    name: Lint code base
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+env:
+  AWS_REGION: eu-west-1
 
-      - name: Run Super-Linter
-        uses: github/super-linter@v4
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+    building-image:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Clone repository
+          uses: actions/checkout@v3
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ env.AWS_REGION }}
+
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+
+        - name: Build, tag, and push image to Amazon ECR
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: lambda
+            IMAGE_TAG: demo
+          run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
