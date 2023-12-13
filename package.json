@@ -1,0 +1,11 @@
+{
+  "name": "dockerized-lambda",
+  "version": "1.0.0",
+  "description": "This project contains a lambda being handled by Docker and a CI/CD that send it over to AWS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
