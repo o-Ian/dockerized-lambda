@@ -1,0 +1,23 @@
+name: Deploy to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  building-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ianstigli/lambda:${{ github.sha }}
+
+      - name: Docker Push
+        run: docker push ianstigli/lambda:${{ github.sha }}
