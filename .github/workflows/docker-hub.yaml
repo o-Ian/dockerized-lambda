@@ -1,4 +1,4 @@
-name: Deploy to ECR
+name: Deploy to Docker Hub
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  building-image:
+  image-docker-hub:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
