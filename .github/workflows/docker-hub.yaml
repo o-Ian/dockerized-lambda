@@ -21,7 +21,7 @@ jobs:
           echo "$DOCKER_USER" 
           echo "$DOCKER_PASSWORD" 
           echo "$TEST"
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ianstigli/lambda:${{ github.sha }}
