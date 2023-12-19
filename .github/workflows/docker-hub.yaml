@@ -16,9 +16,11 @@ jobs:
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          TEST: 3
         run: |
           echo "$DOCKER_USER" 
-          echo "DOCKER_PASSWORD" 
+          echo "$DOCKER_PASSWORD" 
+          echo "$TEST"
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       - name: Build the Docker image
