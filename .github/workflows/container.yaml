@@ -7,14 +7,10 @@ on:
 
 env:
   AWS_REGION: eu-west-1
-  ECS_SERVICE_FE: vwsermi-frontend
-  ECR_IMAGE_FE: vwsermi-frontend
-  ECS_TASK_DEFINITION_FE: .aws/task-def/vwsermi-frontend.json
-  CONTAINER_NAME_FE: vwsermi-frontend
   ECR_IMAGE_LAMBDA_1: vwsermi-lambda-1
   ECS_SERVICE_LAMBDA_1: vwsermi-lambda-1
   ECS_TASK_DEFINITION_LAMBDA_1: .aws/task-def/lambda-1.json
-  CONTAINER_NAME_LAMBDA_1: vwsermi-ws
+  CONTAINER_NAME_LAMBDA_1: vwsermi-lambda-1
   ECS_CLUSTER: vwsermi-cluster
 
 jobs:
