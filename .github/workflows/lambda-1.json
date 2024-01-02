@@ -1,0 +1,43 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "lambda-1",
+      "image": "746950625370.dkr.ecr.us-east-1.amazonaws.com/lambda",
+      "cpu": 0,
+      "memory": 512,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 9000,
+          "protocol": "tcp",
+          "name": "lambda-1-8080-tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "secrets": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "/ecs/lambda-1",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "family": "lambda-1",
+  "executionRoleArn": "arn:aws:iam::362148957946:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::362148957946:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "2048"
+}
