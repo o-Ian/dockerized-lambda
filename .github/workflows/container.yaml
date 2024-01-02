@@ -10,7 +10,7 @@ env:
   ECR_IMAGE_LAMBDA_1: vwsermi-lambda-1
   ECS_SERVICE_LAMBDA_1: vwsermi-lambda-1
   ECS_TASK_DEFINITION_LAMBDA_1: .aws/task-def/lambda-1.json
-  CONTAINER_NAME_LAMBDA_1: vwsermi-lambda-1
+  CONTAINER_NAME_LAMBDA_1: lambda-1
   ECS_CLUSTER: vwsermi-cluster
 
 jobs:
