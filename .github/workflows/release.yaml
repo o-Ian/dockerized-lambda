@@ -29,7 +29,7 @@ jobs:
         - name: Build and tag images
           env:
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            ECR_REPOSITORY: lambdas
+            ECR_REPOSITORY: lambda
           run: |
             docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification .
             docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:${IMAGE_TAG}
