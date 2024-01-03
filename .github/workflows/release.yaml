@@ -9,7 +9,7 @@ env:
   AWS_REGION: eu-west-1
 
 jobs:
-  lambda-images:
+  building-image:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -26,17 +26,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and tag images
+      - name: Lambda Notification Deployment
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: lambda
+          ECR_REPOSITORY: lambda-notification
+          VERSION: 1.1.1
         run: |
-          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:1.1.1
-
-      - name: Push images to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: lambda
-        run: |
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:1.1.1
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
