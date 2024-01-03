@@ -32,9 +32,7 @@ jobs:
             ECR_REPOSITORY: lambda
           run: |
             docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification .
-            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:${IMAGE_TAG}
-            docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept .
-            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept:${IMAGE_TAG}
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:1.1.1
 
         - name: Push images to Amazon ECR
           env:
@@ -42,5 +40,4 @@ jobs:
             ECR_REPOSITORY: lambdas
             IMAGE_TAG: latest # Change this tag to your desired tag name
           run: |
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:${IMAGE_TAG}
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept:${IMAGE_TAG}
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:1.1.1
