@@ -10,7 +10,6 @@ env:
 
 jobs:
     lambda-images:
-      needs: [ release-semantic-version ]
       runs-on: ubuntu-latest
       steps:
         - name: Clone repository
@@ -30,14 +29,18 @@ jobs:
         - name: Build and tag images
           env:
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            ECR_REPOSITORY: lambda
+            ECR_REPOSITORY: lambdas
           run: |
             docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification .
-            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:1.1.1
-            
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:${IMAGE_TAG}
+            docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept .
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept:${IMAGE_TAG}
+
         - name: Push images to Amazon ECR
           env:
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
             ECR_REPOSITORY: lambdas
+            IMAGE_TAG: latest # Change this tag to your desired tag name
           run: |
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:1.1.1
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-notification:${IMAGE_TAG}
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:lambda-deletion-concept:${IMAGE_TAG}
