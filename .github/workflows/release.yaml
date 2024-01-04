@@ -9,12 +9,25 @@ env:
   AWS_REGION: eu-west-1
 
 jobs:
-  building-image:
+  is-file-changed:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
 
+      - name: Filter Dockerfile
+        uses: dorny/paths-filter@v2
+        with:
+          base: 'main'
+          filters: |
+            lambda-image:
+              - 'Dockerfile'
+
+  building-image:
+    needs: [ is-file-changed ]
+    if: ${{ needs.is-file-changed.steps.filter.outputs.lambda-image == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -31,6 +44,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: lambda-notification
           VERSION: latest
+
         run: |
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
