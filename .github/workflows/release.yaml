@@ -32,7 +32,7 @@ jobs:
 
   lambda-deployments:
     needs: [ is-file-changed ]
-    if: ${{needs.is-file-changed.outputs.lambda-notification}} == 'true'
+    if: needs.is-file-changed.outputs.lambda-notification == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -57,4 +57,4 @@ jobs:
           VERSION: latest
         run: |
           docker buildx build -t $ECR_REGISTRY/$LAMBDA_NOTIFICATION_NAME:$VERSION .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
+          docker push $ECR_REGISTRY/$LAMBDA_NOTIFICATION_NAME:$VERSION
