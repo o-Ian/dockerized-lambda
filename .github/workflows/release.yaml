@@ -32,7 +32,7 @@ jobs:
 
   lambda-deployments:
     needs: [ is-file-changed ]
-    if: needs.is-file-changed.outputs.lambda-notification == 'true'
+    if: ${{needs.is-file-changed.outputs.lambda-notification}} == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
