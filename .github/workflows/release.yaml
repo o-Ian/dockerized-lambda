@@ -30,7 +30,7 @@ jobs:
           base: 'main'
           filters: |
             lambda-notification-dockerfile:
-              - 'Dockerfile'
+              - 'src/main/java/lambda/project/Dockerfile'
             lambda-notification-handler:
               - 'src/main/java/lambda/project/HelloLambda.java'
 
@@ -62,7 +62,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker buildx build -t $ECR_REGISTRY/lambda-notification:$VERSION .
+          docker buildx build -t $ECR_REGISTRY/lambda-notification:$VERSION -f src/main/java/lambda/project/Dockerfile .
           docker push $ECR_REGISTRY/lambda-notification:$VERSION
           aws lambda update-function-code \
            --function-name lambda-notification \
