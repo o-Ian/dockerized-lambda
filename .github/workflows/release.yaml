@@ -7,6 +7,7 @@ on:
 
 env:
   AWS_REGION: eu-west-1
+  VERSION: latest
 
 jobs:
   is-file-changed:
@@ -40,28 +41,16 @@ jobs:
 
   lambda-deployments:
     needs: [ is-file-changed ]
-    if: needs.is-file-changed.outputs.lambda-notification-dockerfile == 'true' || needs.is-file-changed.outputs.lambda-notification-handler == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Lambda Notification Deployment
-        if: needs.is-file-changed.outputs.lambda-notification-dockerfile == 'true' || needs.is-file-changed.outputs.lambda-notification-handler == 'true'
+        if: needs.is-file-changed.outputs.lambda-notification-dockerfile == 'false'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          VERSION: latest
         run: |
           docker buildx build -t $ECR_REGISTRY/lambda-notification:$VERSION .
           docker push $ECR_REGISTRY/lambda-notification:$VERSION
+          aws lambda update-function-code \
+           --function-name lambda-notification \
+           --image-uri $ECR_REGISTRY/lambda-notification:VERSION
