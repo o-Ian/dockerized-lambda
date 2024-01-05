@@ -58,7 +58,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Lambda Notification Deployment
-        if: needs.is-file-changed.outputs.lambda-notification-dockerfile == 'false'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
