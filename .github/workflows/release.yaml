@@ -12,7 +12,12 @@ jobs:
   is-file-changed:
     runs-on: ubuntu-latest
     outputs:
-      lambda-notification: ${{steps.filter.outputs.lambda}}
+      lambda-notification-dockerfile: ${{steps.filter.outputs.lambda-notification-dockerfile}}
+      lambda-notification-handler: ${{steps.filter.outputs.lambda-notification-handler}}
+
+      lambda-deletion-dockerfile: ${{steps.filter.outputs.lambda-deletion-dockerfile}}
+      lambda-deletion-handler: ${{steps.filter.outputs.lambda-deletion-handler}}
+
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
@@ -23,16 +28,19 @@ jobs:
         with:
           base: 'main'
           filters: |
-            lambda:
+            lambda-notification-dockerfile:
               - 'Dockerfile'
+            lambda-notification-handler:
+              - 'src/main/java/lambda/project/HelloLambda.java'
 
       - name: Set Outputs
         run: |
-          echo "lambda-notification=${{steps.filter.outputs.lambda}}" >> $GITHUB_OUTPUT
+          echo "lambda-notification-dockerfile=${{steps.filter.outputs.lambda-notification-dockerfile}}" >> $GITHUB_OUTPUT
+          echo "lambda-notification-handler=${{steps.filter.outputs.lambda-notification-handler}}" >> $GITHUB_OUTPUT   
 
   lambda-deployments:
     needs: [ is-file-changed ]
-    if: needs.is-file-changed.outputs.lambda-notification == 'true'
+    if: needs.is-file-changed.outputs.lambda-notification-dockerfile == 'true' || needs.is-file-changed.outputs.lambda-notification-handler == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -49,12 +57,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Lambda Deployment
+      - name: Lambda Notification Deployment
+        if: needs.is-file-changed.outputs.lambda-notification-dockerfile == 'true' || needs.is-file-changed.outputs.lambda-notification-handler == 'true'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          LAMBDA_NOTIFICATION_NAME: lambda-notification
-          LAMBDA_DELETION_CONCEPT_NAME: lambda-deletion-concept
           VERSION: latest
         run: |
-          docker buildx build -t $ECR_REGISTRY/$LAMBDA_NOTIFICATION_NAME:$VERSION .
-          docker push $ECR_REGISTRY/$LAMBDA_NOTIFICATION_NAME:$VERSION
+          docker buildx build -t $ECR_REGISTRY/lambda-notification:$VERSION .
+          docker push $ECR_REGISTRY/lambda-notification:$VERSION
