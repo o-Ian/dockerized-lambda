@@ -14,11 +14,10 @@ jobs:
     strategy:
       matrix:
         dockerfile: [ phpfile, javafile]
-    env:
-      dockerfile_path: ${{ env[format('{0}_path', matrix.dockerfile )] }}
-      matrix_reference: ${{matrix.dockerfile}}
     outputs:
       ${{matrix.dockerfile}}: ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
+    env:
+      dockerfile_path: ${{ env[format('env_{0}_path', matrix.dockerfile )] }}
     steps:
       - name: Test
         run: echo ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
@@ -33,7 +32,7 @@ jobs:
           base: 'main'
           filters: |
             ${{matrix.dockerfile}}:
-              - ${{env.dockerfile_reference}}
+              - ${{env.dockerfile_path}}
 
       - name: Set Outputs
         run: |
