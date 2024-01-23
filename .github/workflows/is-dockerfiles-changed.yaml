@@ -15,12 +15,12 @@ jobs:
       matrix:
         dockerfile: [ phpfile, javafile]
     outputs:
-      ${{matrix.dockerfile}}: ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
+      something: ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
     env:
       dockerfile_path: ${{ env[format('{0}_path', matrix.dockerfile )] }}
     steps:
       - name: Test
-        run: echo ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
+        run: echo  ${{ env[format('{0}_path', matrix.dockerfile )] }}
 
       - name: Clone repository2
         uses: actions/checkout@v3
@@ -36,4 +36,4 @@ jobs:
 
       - name: Set Outputs
         run: |
-          echo "${{matrix.dockerfile}}=${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}" >> $GITHUB_OUTPUT
+          echo "something=${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}" >> $GITHUB_OUTPUT
