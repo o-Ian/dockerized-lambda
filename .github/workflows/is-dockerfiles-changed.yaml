@@ -1,9 +1,7 @@
 name: Dockerfile Review
 
 on:
-  push:
-    # only trigger on branches, not on tags
-    branches: '**'
+  push
 
 env:
   phpfile: 'testfile.php'
