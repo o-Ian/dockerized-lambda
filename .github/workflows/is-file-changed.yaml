@@ -1,6 +1,9 @@
 name: Dockerfile Review
 
-on: [pull_request]
+on:
+  push:
+    # only trigger on branches, not on tags
+    branches: '**'
 
 env:
   phpfile: 'testfile.php'
