@@ -17,10 +17,11 @@ jobs:
     outputs:
       papapa: ${{ matrix.dockerfile )] }}
     env:
-      dockerfile_path: ${{ env[format('env_{0}_path', matrix.dockerfile )] }}
+      value: ${{matrix.dockerfile}}
+      dockerfile_path: ${{ env[format('env_{0}_path', value )] }}
     steps:
       - name: Test
-        run: echo ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
+        run: echo ${{env.value}}
 
       - name: Clone repository2
         uses: actions/checkout@v3
