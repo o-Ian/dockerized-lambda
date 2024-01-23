@@ -5,7 +5,6 @@ on:
 
 env:
   phpfile: 'testfile.php'
-
   javafile: 'testclass.java'
 
 jobs:
@@ -13,16 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dockerfile: [ phpfile, javafile]
+        dockerfile: [phpfile, javafile]
     outputs:
-      ${{matrix.dockerfile}}: ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
+      phpfile: ${{ steps.filter.outputs.phpfile }}
+      javafile: ${{ steps.filter.outputs.javafile }}
     env:
-      dockerfile_path: ${{ env[format('env_{0}_path', matrix.dockerfile )] }}
+      DOCKERFILE_PATH: ${{ env[format('{0}_path', matrix.dockerfile)] }}
     steps:
       - name: Test
-        run: echo ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
+        run: echo ${{ matrix.dockerfile }}
 
-      - name: Clone repository2
+      - name: Clone repository
         uses: actions/checkout@v3
 
       - name: Filter Dockerfile
@@ -31,9 +31,12 @@ jobs:
         with:
           base: 'main'
           filters: |
-            ${{matrix.dockerfile}}:
-              - ${{env.dockerfile_path}}
+            phpfile:
+              - ${{ env.DOCKERFILE_PATH }}
+            javafile:
+              - ${{ env.DOCKERFILE_PATH }}
 
       - name: Set Outputs
         run: |
-          echo "${{matrix.dockerfile}}=${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}" >> $GITHUB_OUTPUT
+          echo "phpfile=${{ steps.filter.outputs.phpfile }}" >> $GITHUB_OUTPUT
+          echo "javafile=${{ steps.filter.outputs.javafile }}" >> $GITHUB_OUTPUT
