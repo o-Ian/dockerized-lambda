@@ -8,6 +8,7 @@ on:
 env:
   AWS_REGION: eu-west-1
   VERSION: latest
+  TEST: 'src/main/java/lambda/project/Dockerfile'
 
 jobs:
   is-file-changed:
@@ -30,7 +31,7 @@ jobs:
           base: 'main'
           filters: |
             lambda-notification-dockerfile:
-              - 'src/main/java/lambda/project/Dockerfile'
+              - ${{env.TEST}}
             lambda-notification-handler:
               - 'src/main/java/lambda/project/HelloLambda.java'
 
