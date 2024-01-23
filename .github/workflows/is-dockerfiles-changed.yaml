@@ -17,7 +17,7 @@ jobs:
     outputs:
       papapa: ${{ (matrix.dockerfile) }}
     env:
-      dockerfile_path: ${{ env[format('{0}_path', matrix.dockerfile)] }}
+      dockerfile_path: ${{ [format('env.{0}_path', matrix.dockerfile)] }}
     steps:
       - name: Test
         run: echo ${{ steps.filter.outputs[format('{0}', matrix.dockerfile )] }}
