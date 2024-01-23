@@ -1,2 +1,2 @@
-public class testclass2 {
+public class testclass343 {
 }
