@@ -1,33 +1,13 @@
 name: Dockerfile Review
 
-on:
-  push
+on: [pull_request]
 
 jobs:
-  is-dockerfiles-changed:
+  dockerfile-review:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - dockerfile: phpfile
-            path: testfile.php
-          - dockerfile: javafile
-            path: testclass.java
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-
-      - name: Filter Dockerfile
-        uses: dorny/paths-filter@v2
-        id: filter
+      - uses: actions/checkout@v3
+      - uses: hadolint/hadolint-action@v3.1.0
         with:
-          base: 'main'
-          filters: |
-            ${{matrix.dockerfile}}:
-              - ${{matrix.path}}
-
-      - name: Dump GitHub context
-        if: steps.filter.outputs.changes != '[]'
-        run: |
-          echo ${{steps.filter.outputs.changes}}
-          echo 'This file has been changed'
+          recursive: true
+          dockerfile: "Dockerfile"
